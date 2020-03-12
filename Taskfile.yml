@@ -2,7 +2,7 @@ version: '3'
 
 vars:
   USER: evg4b
-  REPO: cheers2019
+  REPO: jupyter-notebook-dotnet-ts-mssql
   VERSION:
     sh: git describe --abbrev=0
   IMAGE_NAME: "{{.USER}}/{{.REPO}}:{{.VERSION}}"
