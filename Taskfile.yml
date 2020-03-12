@@ -1,0 +1,50 @@
+version: '3'
+
+vars:
+  USER: evg4b
+  REPO: cheers2019
+  VERSION:
+    sh: git describe --abbrev=0
+  IMAGE_NAME: "{{.USER}}/{{.REPO}}:{{.VERSION}}"
+  FULL_IMAGE_NAME: "{{.USER}}/{{.REPO}}:{{.VERSION}}-full"
+  MINIMAL_IMAGE_NAME: "{{.USER}}/{{.REPO}}:{{.VERSION}}-minimal"
+
+tasks:
+  build-all:
+    cmds:
+      - task: build-normal
+      - task: build-full
+      - task: build-minimal
+
+  push-all:
+    cmds:
+      - task: push-normal
+      - task: push-full
+      - task: push-minimal
+
+  build-normal:
+    cmds:
+      - docker build . -t {{.IMAGE_NAME}}
+
+  push-normal:
+    cmds:
+      - docker login
+      - docker push {{.IMAGE_NAME}}
+
+  build-full:
+    cmds:
+      - docker build --build-arg NOTEBOOK_BASE=jupyter/all-spark-notebook . -t {{.FULL_IMAGE_NAME}}
+
+  push-full:
+    cmds:
+      - docker login
+      - docker push {{.FULL_IMAGE_NAME}}
+
+  build-minimal:
+    cmds:
+      - docker build --build-arg NOTEBOOK_BASE=jupyter/minimal-notebook . -t {{.MINIMAL_IMAGE_NAME}}
+
+  push-minimal:
+    cmds:
+      - docker login
+      - docker push {{.MINIMAL_IMAGE_NAME}}
