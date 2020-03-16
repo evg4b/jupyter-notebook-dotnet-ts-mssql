@@ -27,10 +27,11 @@ RUN curl https://packages.microsoft.com/config/ubuntu/18.04/prod.list > /etc/apt
 RUN sudo apt-get update
 RUN sudo ACCEPT_EULA=Y apt-get install -y dotnet-sdk-3.1 curl msodbcsql17 mssql-tools unixodbc-dev
 
-RUN dotnet tool install -g dotnet-try
 
 # FIX PATH ISSUE
 ENV PATH="${PATH}:${HOME}/.dotnet/tools"
+
+RUN dotnet tool install -g dotnet-try
 RUN dotnet try jupyter install \
     && fix-permissions ${NB_HOME}
 
@@ -49,6 +50,9 @@ RUN pip install ipython-sql \
     && pip install pyodbc
 
 RUN sudo rm -rf /var/lib/apt/lists/*
+
+# FIX Permission issue https://github.com/jupyter/notebook/issues/5058
+ENV JUPYTER_RUNTIME_DIR=/tmp
 
 USER ${NB_USER}
 
