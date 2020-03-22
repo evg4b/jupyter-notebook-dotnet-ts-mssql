@@ -6,8 +6,11 @@ vars:
   VERSION:
     sh: git describe --abbrev=0
   IMAGE_NAME: "{{.USER}}/{{.REPO}}:{{.VERSION}}"
+  LATESTS_IMAGE_NAME: "{{.USER}}/{{.REPO}}:latest"
   FULL_IMAGE_NAME: "{{.USER}}/{{.REPO}}:{{.VERSION}}-full"
+  LATESTS_FULL_IMAGE_NAME: "{{.USER}}/{{.REPO}}:latest-full"
   MINIMAL_IMAGE_NAME: "{{.USER}}/{{.REPO}}:{{.VERSION}}-minimal"
+  LATESTS_MINIMAL_IMAGE_NAME: "{{.USER}}/{{.REPO}}:latest-minimal"
 
 tasks:
   build-all:
@@ -24,27 +27,30 @@ tasks:
 
   build-normal:
     cmds:
-      - docker build . -t {{.IMAGE_NAME}}
+      - docker build . -t {{.IMAGE_NAME}} -t {{.LATESTS_IMAGE_NAME}}
 
   push-normal:
     cmds:
       - docker login
       - docker push {{.IMAGE_NAME}}
+      - docker push {{.LATESTS_IMAGE_NAME}}
 
   build-full:
     cmds:
-      - docker build --build-arg NOTEBOOK_BASE=jupyter/all-spark-notebook . -t {{.FULL_IMAGE_NAME}}
+      - docker build --build-arg NOTEBOOK_BASE=jupyter/all-spark-notebook . -t {{.FULL_IMAGE_NAME}} -t {{.LATESTS_FULL_IMAGE_NAME}}
 
   push-full:
     cmds:
       - docker login
       - docker push {{.FULL_IMAGE_NAME}}
+      - docker push {{.LATESTS_FULL_IMAGE_NAME}}
 
   build-minimal:
     cmds:
-      - docker build --build-arg NOTEBOOK_BASE=jupyter/minimal-notebook . -t {{.MINIMAL_IMAGE_NAME}}
+      - docker build --build-arg NOTEBOOK_BASE=jupyter/minimal-notebook . -t {{.MINIMAL_IMAGE_NAME}} -t {{.LATESTS_MINIMAL_IMAGE_NAME}}
 
   push-minimal:
     cmds:
       - docker login
       - docker push {{.MINIMAL_IMAGE_NAME}}
+      - docker push {{.LATESTS_MINIMAL_IMAGE_NAME}}
